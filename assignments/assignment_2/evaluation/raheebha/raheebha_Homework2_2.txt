@@ -1,0 +1,30 @@
+#!/bin/bash 
+
+source_file="ufs-land.namelist.US-SRG"
+temp_file="ufs-land.namelist.template"
+
+sed "s#US-SRG#REGION#g" ${source_file} > ${temp_file}
+
+sed -i "s#2009-12-31#DATE_IC#g" ${temp_file}
+sed -i "s#2010-01-01#START_DATE#g" ${temp_file}
+sed -i "s#365#RUN_DAYS#g" ${temp_file}
+
+for line in `cat site_list.txt`; do
+    IFS=",";
+	set -- $line
+	site_id=$1
+    start_date=$2
+	date_ic=$start_date-1
+    rundays=5
+	unset IFS
+    
+    
+    site_file="ufs-land.namelist.${site_id}"
+    
+    sed "s#REGION#${site_id}#g" $temp_file > $site_file
+    
+    sed -i "s#DATE_IC#${date_ic}#g" $site_file
+	sed -i "s#START_DATE#${start_date}#g" $site_file
+	sed -i "s#RUN_DAYS#${rundays}#g" $site_file
+ mv $site_file model_run/${site_id}
+done

@@ -1,0 +1,52 @@
+#!/bin/bash
+
+for line in `cat site_list.txt`; do
+	echo $line          # print each line
+	echo  		    # print a blank line
+	IFS=","             # define the deliminator, split by comma
+	set -- $line 
+	site_id=$1          # assign the first element in a line to variable "site_id"
+	model_run_year=$2        # assign the second element in a line to variable "model_run_year"
+	unset IFS           # we need to unset the deliminator
+	echo "site name is:" $site_id
+	echo "model run year is:" $model_run_year
+mkdir model_run 
+mkdir model_run/$1
+
+################
+mkdir model_run/$1/forcing
+mkdir model_run/$1/init 
+mkdir model_run/$1/static 
+
+###############
+ year_pre=$((model_run_year - 1))
+f=./ameriflux_init_fields.C1152.$1.${year_pre}-12-31_23-00-00.nc       
+	echo $f
+        d=model_run/$1/init/
+        echo $d
+        cp $f $d
+        echo $1
+        pwd
+
+#############
+# loop through 5-day meteorological forcing data 
+    for day in {1..5}; do
+        cp AMF_$1_forcing_${model_run_year}-01-0${day}.nc model_run/$1/forcing
+
+
+###########
+
+cp ameriflux_static_fields.C1152.$1.nc model_run/$1/static
+
+
+done
+
+
+
+
+
+
+
+
+done
+

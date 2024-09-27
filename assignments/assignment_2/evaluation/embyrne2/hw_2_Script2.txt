@@ -1,0 +1,33 @@
+#!/bin/bas
+
+# define the locations of the directory and folders 
+Root_DIR  = " Hydro_ModelCourse/Assignments/Assignment_2/gly606_hw2"
+SOURCE_FILE ="$ROOT_DIR/ufs-land.namelist.US-SRG"
+TEMP_FILE ="$ROOT_DIR/ufs-land.namelist.template"
+
+# create the temp for the confirguration 
+sed "s#US-SRG#REGION#g" "$SOURCE_FILE" > "$TEMP_FILE" 
+
+# Using sed to replace other site-specific information with placeholders
+sed -i "s#2009-12-31_23-00-00#DATE_IC#g" ${TEMP_FILE}
+sed -i "s#2010-01-01 00:00:00#START_DATE#g" ${TEMP_FILE}
+sed -i "s#365#RUN_DAYS#g" ${TEMP_FILE}
+sed -i "s#./ameriflux_static_fields.C1152.US-SRG.nc#STATIC#g" ${TEMP_FILE}
+sed -i "s#./ameriflux_init_fields.C1152.US-SRG.2009-12-31_23-00-00.nc#INIT#g" ${TEMP_FILE}
+sed -i "s#forcing/US-SRG#FORCING#g" ${TEMP_FILE} 
+
+# Create configuration files for each site
+CONFIG_DIR="model_run/${site_id}"
+CONFIG_FILE="${CONFIG_DIR}/ufs-land.namelist.${site_id}"
+
+    # Replace placeholders with site-specific information
+ sed "$TEMP_FILE" "$CONFIG_FILE"
+ sed -i "s#REGION#$site_id#g" "$CONFIG_FILE"
+ sed -i "s#DATE_IC#${start_year}-12-31_23-00-00#g" "$CONFIG_FILE"
+ sed -i "s#START_DATE#${start_year}-01-01 00:00:00#g" "$CONFIG_FILE"
+ sed -i "s#RUN_DAYS#365#g" "$CONFIG_FILE"
+ sed -i "s#STATIC#${site_id}/static/ameriflux_static_fields.C1152.$site_id.nc#g" "$CONFIG_FILE"
+ sed -i "s#INIT#${site_id}/init/ameriflux_init_fields.C1152.$site_id.${start_year}-12-31_23-00-00.nc#g" "$CONFIG_FILE"
+ sed -i "s#FORCING#${site_id}/forcing#g" "$CONFIG_FILE"
+
+done 

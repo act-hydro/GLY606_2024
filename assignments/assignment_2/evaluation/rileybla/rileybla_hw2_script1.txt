@@ -1,0 +1,50 @@
+#!/bin/bash
+
+for line in `cat gly606_hw2/site_list.txt`; do
+	# Step 1: extract site_id and model run year
+	#         from "gly606_hw2/site_list.txt" file
+	# Example script: https://github.com/act-hydro/GLY606_2024/blob/main/in_class_practice/bash_practice/for_loop.sh
+
+	#for line in `cat gly606_hw2/site_list.txt`; do
+        IFS=',';
+        set -- ${line}
+        site_id=${1}
+        year=${2}
+       
+	# Step 2: make directory (mkdir) for each site
+
+        mkdir model_run/${site_id}
+        unset IFS
+	
+	# Step 3: within each site directory, make sub-directory
+	#         to store initial condition, forcing, and static file
+
+	mkdir model_run/${site_id}/forcing
+	mkdir model_run/${site_id}/init
+        mkdir model_run/${site_id}/static
+	# Step 4: copy files (cp) from "gly606_hw2" to each subdir
+	# Syntax for "cp" can be referred to 
+	# https://github.com/act-hydro/GLY606_2024/blob/main/in_class_practice/bash_practice/common_bash_comments.pdf
+
+	# for example, if we want to copy ameriflux_static_fields.C1152.CA-Cbo.nc in "gly606_hw2" folder 
+	#	to "model_run/CA-Cbo/static" folder
+	#	we would use "cp gly606_hw2/ameriflux_static_fields.C1152.CA-Cbo.nc model_run/CA-Cbo/static"
+
+	# 4.1. copy the static file 
+
+        cp gly606_hw2/ameriflux_static_fields.C1152.${site_id}.nc model_run/${site_id}/static
+
+	# 4.2. copy the initial condition file
+	# note that given model run starts from <start_year>-01-01
+	# the date for initial condition file should be previous year
+	year_pre=$((year - 1))
+	cp gly606_hw2/ameriflux_init.C1152.${site_id}.${year_pre}-12-31_23-00-00.nc model_run/${site_id}/init
+
+	# 4.3. copy the meteorological forcing file
+	# use for-loop to loop through 5 days
+	for ${day} in {1..5}; do
+	cp gly606_hw2/AMF_${site_id}_forcing_${year}-01-${day}.nc  model_run/${site_id}/forcing
+
+done
+
+done	

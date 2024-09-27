@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Part 1: 
+# Site Name  : US-SRG           --> use “REGION"
+# Date for initial cond file : 2009-12-31       --> use "DATE_IC"
+# Start date  : 2010-01-01       --> use "START_DATE"
+# number of run days : 5              --> use "RUN_DAYS"
+
+# create source and template files
+source_file="ufs-land.namelist"
+temp_file="ufs-land.namelist.template"
+
+# Create a template file with placeholders
+sed "s#US-SRG#REGION#g" ${source_file} > ${temp_file}
+sed -i "s#2009-12-31#DATE_IC#g" ${temp_file}
+sed -i "s#2010-01-01#START_DATE#g" ${temp_file}
+sed -i "s#5#RUN_DAYS#g" ${temp_file}
+
+# Part 2: 
+
+# Define the output directory
+odir="./model_run/"
+
+# Ensure output directory exists
+if [ ! -d "$odir" ]; then
+    mkdir -p "$odir"
+fi
+
+# Read the site information from the CSV file
+for line in `cat ./spinup_config.ameriflux_site.MDS.subset.csv`; do
+	
+	# Split the strings by comma ","
+	IFS=","
+	set -- $line
+	site_id=$1        # Site ID (e.g., US-SRG)
+	date_ic=$2        # Date for initial condition file (e.g., 2009-12-31)
+	start_date=$3     # Start date (e.g., 2010-01-01)
+	run_days=$5       # Number of run days (e.g., 5)
+	unset IFS
+	
+	# Print information for each site
+	echo "Site ID     :"    $site_id
+	echo "IC date     :"    $date_ic
+	echo "Start date  :"    $start_date
+	echo "# of days   :"    $run_days
+	
+	# make changes to a copy
+	site_file="${odir}ufs-land.namelist.${site_id}"
+
+	# Save the changes to a copy of the template file for each site
+	cp $temp_file $site_file
+	
+	# Make modification to the site-specific configuration file
+	sed -i "s#REGION#${site_id}#g" $site_file
+	sed -i "s#DATE_IC#${date_ic}#g" $site_file
+	sed -i "s#START_DATE#${start_date}#g" $site_file
+	sed -i "s#RUN_DAYS#${run_days}#g" $site_file
+
+	echo " ${site_id} at ${site_file}"
+done
+
+

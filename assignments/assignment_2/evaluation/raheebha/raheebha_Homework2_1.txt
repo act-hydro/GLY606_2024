@@ -1,0 +1,21 @@
+#!/bin/bash
+
+mkdir model_run
+
+for line in `cat site_list.txt`; do
+    IFS=',';
+    set -- ${line}
+    site_id=${1}
+    year=${2}
+    unset IFS
+    mkdir model_run/$site_id
+    	mkdir model_run/$site_id/forcing
+	mkdir model_run/$site_id/init
+	mkdir model_run/$site_id/static
+year_pre=$(($year - 1))
+    cp ameriflux_init_fields.C1152.${site_id}.${year_pre}-12-31_23-00-00.nc model_run/${site_id}/init
+    cp ameriflux_static_fields.C1152.${site_id}.nc model_run/${site_id}/static
+    for day in {1..5}; do
+        cp AMF_${site_id}_forcing_${year}-01-0${day}.nc model_run/${site_id}/forcing
+    done
+done 

@@ -1,0 +1,41 @@
+#!/bin/bash
+
+for line in `cat gly606_hw2/site_list.txt`; do
+
+	# from "gly606_hw2/site_list.txt" file
+	echo $line          # print lines
+	echo  		    # print a blank line
+        IFS=","             # define the deliminator, split by comma
+	set -- $line 
+	site_id=$1          # assign to variable "site_id" (1st element)
+	start_year=$2        # assign to variable "start_year" (2 element)
+	unset IFS           #  unset the deliminator
+	echo "site name is:" $site_id
+	echo "start date is:" $start_year	
+
+	mkdir model_run/${site_id} # create the direct for site_id
+	
+	# within each site directory, make sub-dir
+	#  and store initial condition, forcing, and static file
+
+	mkdir model_run/${site_id}/init	# initial conditions
+	mkdir model_run/${site_id}/forcing # forcing
+	mkdir model_run/${site_id}/static # static 
+	
+	# copy files from gly606_hw2 files to each subdir
+    
+	# Static file 
+	year_pre=$((start_year - 1)) 	#define the year_pre
+	cp gly606_hw2/ameriflux_init_fields.C1152.${site_id}.${year_pre}-12-31_23-00-00.nc model_run/${site_id}/init  
+    
+	# site_id` and `year_start` from site_list.txt
+	#  run starts from 2016-01-01
+	# the timing for the initial condition is 2015-12-31_23-00-00
+
+	cp gly606_hw2/ameriflux_static_fields.C1152.${site_id}.nc model_run/${site_id}/static
+	#the static fields into the forcing folder
+
+	for day in {1..5}; do # use the for loop for days 1 to 5
+       		 cp gly606_hw2/AMF_${site_id}_forcing_${start_year}-01-0${day}.nc model_run/${site_id}/forcing
+	 done
+done

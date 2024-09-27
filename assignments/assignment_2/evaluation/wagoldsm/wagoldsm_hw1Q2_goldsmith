@@ -1,0 +1,52 @@
+
+#!/bin/bash
+
+# Loop through each line of the site_list.txt file
+for line in `cat gly606_hw2/site_list.txt`; do 
+    echo $line  # print each line
+    echo    # print a blank line
+    IFS=","    # define the delimiter, split by comma
+    set -- $line 
+    site_id=$1   # assign the f"site_id"
+    init_date=$2   # assign the "init_date"
+    start_date=$3    # assign the "start_date"
+    num_run_days=$5  # assign the "num_run_days"
+    unset IFS           # we need to unset the delimiter
+
+    start_year=$(echo $start_date | cut -d "-" -f 1) # Extract year from the start date
+
+    echo "site name is:" $site_id
+    echo "start date is:" $start_date  
+
+    # Step 2: 
+
+    mod_DIR=“model_run/$site_id"
+    if [ ! -d "$mod_DIR" ]; then
+        echo "Creating folder: $mod_DIR"
+        mkdir -p "$mod_DIR/forcing" "$mod_DIR/init" "$mod_DIR/static"
+    fi
+
+    # Step 4:
+
+    cp gly606_hw2/ameriflux_static_fields.C1152.${site_id}.nc "$mod_DIR/static/" 
+
+    # 
+    # The date for initial condition 
+    year_pre=$((start_year - 1))
+    init_file="${site_id}_init_${year_pre}-12-31_23-00-00.nc"
+    echo "$init_file"
+    cp "gly606_hw2/$init_file" "$mod_DIR/init/"
+
+    #
+    echo "$site_id"
+    for day in {01..05}; do
+        forcing_file="${site_id}_forcing_${start_year}-01-${day}.nc"
+        echo "$forcing_file"
+        cp "gly606_hw2/$forcing_file" "$mod_DIR/forcing/" 2>/dev/null
+    done
+
+    echo "$site_id"
+done
+
+
+
