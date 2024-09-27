@@ -1,4 +1,4 @@
-#!/bin/bas
+#!/bin/bash
 
 # define the locations of the directory and folders 
 Root_DIR  = " Hydro_ModelCourse/Assignments/Assignment_2/gly606_hw2"
@@ -16,14 +16,29 @@ sed -i "s#./ameriflux_static_fields.C1152.US-SRG.nc#STATIC#g" ${TEMP_FILE}
 sed -i "s#./ameriflux_init_fields.C1152.US-SRG.2009-12-31_23-00-00.nc#INIT#g" ${TEMP_FILE}
 sed -i "s#forcing/US-SRG#FORCING#g" ${TEMP_FILE} 
 
+for line in `cat gly606_hw2/site_list.txt`; do
+
+        # from "gly606_hw2/site_list.txt" file
+        echo $line          # print lines
+        echo                # print a blank line
+        IFS=","             # define the deliminator, split by comma
+        set -- $line
+        site_id=$1          # assign to variable "site_id" (1st element)
+        start_year=$2        # assign to variable "start_year" (2 element)
+        unset IFS           #  unset the deliminator
+        echo "site name is:" $site_id
+        echo "start date is:" $start_year
+
 # Create configuration files for each site
 CONFIG_DIR="model_run/${site_id}"
 CONFIG_FILE="${CONFIG_DIR}/ufs-land.namelist.${site_id}"
 
+year_ic=$((start_year - 1))
+
     # Replace placeholders with site-specific information
  sed "$TEMP_FILE" "$CONFIG_FILE"
  sed -i "s#REGION#$site_id#g" "$CONFIG_FILE"
- sed -i "s#DATE_IC#${start_year}-12-31_23-00-00#g" "$CONFIG_FILE"
+ sed -i "s#DATE_IC#${year_ic}-12-31_23-00-00#g" "$CONFIG_FILE"
  sed -i "s#START_DATE#${start_year}-01-01 00:00:00#g" "$CONFIG_FILE"
  sed -i "s#RUN_DAYS#365#g" "$CONFIG_FILE"
  sed -i "s#STATIC#${site_id}/static/ameriflux_static_fields.C1152.$site_id.nc#g" "$CONFIG_FILE"
