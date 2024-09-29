@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # define the locations of the directory and folders 
-Root_DIR  = " Hydro_ModelCourse/Assignments/Assignment_2/gly606_hw2"
-SOURCE_FILE ="$ROOT_DIR/ufs-land.namelist.US-SRG"
-TEMP_FILE ="$ROOT_DIR/ufs-land.namelist.template"
+Root_DIR="Hydro_ModelCourse/Assignments/Assignment_2/gly606_hw2"
+SOURCE_FILE="$ROOT_DIR/ufs-land.namelist.US-SRG"
+TEMP_FILE="$ROOT_DIR/ufs-land.namelist.template"
 
 # create the temp for the confirguration 
 sed "s#US-SRG#REGION#g" "$SOURCE_FILE" > "$TEMP_FILE" 
