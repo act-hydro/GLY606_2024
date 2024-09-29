@@ -42,8 +42,8 @@ for line in `cat gly606_hw2/site_list.txt`; do
 
 	# 4.3. copy the meteorological forcing file
 	# use for-loop to loop through 5 days
-	for ${day} in {1..5}; do
-	cp gly606_hw2/AMF_${site_id}_forcing_${year}-01-${day}.nc  model_run/${site_id}/forcing
+	for day in {1..5}; do
+	cp gly606_hw2/AMF_${site_id}_forcing_${year}-01-0${day}.nc  model_run/${site_id}/forcing
 
 done
 

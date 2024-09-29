@@ -3,15 +3,15 @@
 
 #sites=("CA-Cbo" "US-MMS" "US-Ho2" "US-Var" "US-Ton" "US-Ne1" "US-NR1" "US-Me2" "US-Wkg" "US-ARM")
 
-#for site in "${sites[@]}"; do
- #   mkdir "model_run/$site"
-#done
+for site in "${sites[@]}"; do
+    mkdir "model_run/$site"
+done
 
-#for site in "${sites[@]}"; do
-   # mkdir "model_run/$site/forcing"
-  #  mkdir "model_run/$site/init"
- #   mkdir "model_run/$site/static"
-#done
+for site in "${sites[@]}"; do
+     mkdir "model_run/$site/forcing"
+     mkdir "model_run/$site/init"
+     mkdir "model_run/$site/static"
+done
 
 
 

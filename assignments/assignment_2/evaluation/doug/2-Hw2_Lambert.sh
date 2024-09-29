@@ -49,7 +49,7 @@ odir="../config/"
 
 # check whether the targeted output folder exists
 # if this folder does not exist, create it
-if [ ! -f ${odir} ]; then
+if [ ! -d ${odir} ]; then
 	mkdir ${odir}
 fi
 ############>>>>If it does exist, it does nothing, I guess?

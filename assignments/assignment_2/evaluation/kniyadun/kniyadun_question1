@@ -10,17 +10,18 @@ for line in `cat site_list.txt`; do
 	unset IFS           # we need to unset the deliminator
 	echo "site name is:" $site_id
 	echo "model run year is:" $model_run_year
-mkdir model_run 
-mkdir model_run/$1
 
-################
-mkdir model_run/$1/forcing
-mkdir model_run/$1/init 
-mkdir model_run/$1/static 
+	mkdir model_run 
+	mkdir model_run/$1
 
-###############
- year_pre=$((model_run_year - 1))
-f=./ameriflux_init_fields.C1152.$1.${year_pre}-12-31_23-00-00.nc       
+	################
+	mkdir model_run/$1/forcing
+	mkdir model_run/$1/init 
+	mkdir model_run/$1/static 
+
+	###############
+	year_pre=$((model_run_year - 1))
+	f=./ameriflux_init_fields.C1152.$1.${year_pre}-12-31_23-00-00.nc       
 	echo $f
         d=model_run/$1/init/
         echo $d
@@ -28,25 +29,14 @@ f=./ameriflux_init_fields.C1152.$1.${year_pre}-12-31_23-00-00.nc
         echo $1
         pwd
 
-#############
-# loop through 5-day meteorological forcing data 
-    for day in {1..5}; do
-        cp AMF_$1_forcing_${model_run_year}-01-0${day}.nc model_run/$1/forcing
+	#############
+	# loop through 5-day meteorological forcing data 
+    	for day in {1..5}; do
+        	cp AMF_$1_forcing_${model_run_year}-01-0${day}.nc model_run/$1/forcing
+		###########
+	done
 
-
-###########
-
-cp ameriflux_static_fields.C1152.$1.nc model_run/$1/static
-
-
-done
-
-
-
-
-
-
-
+	cp ameriflux_static_fields.C1152.$1.nc model_run/$1/static
 
 done
 
