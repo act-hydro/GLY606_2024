@@ -24,6 +24,7 @@ FROZEN_SOIL FALSE   # calculate frozen soils
 # DOMAIN INFO
 ######################################################################DOMAIN         /home/jovyan/data/model/final_project/vic/param/namerica_domain.01205500.nc 
 DOMAIN         /home/jovyan/data/model/final_project/vic/param/namerica_domain.<SITEID>.nc 
+DOMAIN_TYPE    LAT     lat
 DOMAIN_TYPE    LON     lon
 DOMAIN_TYPE    MASK    mask
 DOMAIN_TYPE    AREA    area
